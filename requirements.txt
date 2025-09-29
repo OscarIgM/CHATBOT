@@ -1,0 +1,10 @@
+pypdf
+faiss-cpu
+sentence-transformers
+pandas
+pyarrow
+tqdm
+openai
+python-dotenv
+matplotlib
+scikit-learn
