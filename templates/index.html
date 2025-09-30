@@ -1,32 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RAG UFRO Demo</title>
+  <style>
+    /* Reset y estilos base */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { background: #f7f7f7; display: flex; justify-content: center; align-items: flex-start; padding: 40px; }
+    .container { width: 100%; max-width: 700px; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+
+    h1 { text-align: center; margin-bottom: 25px; color: #333; }
+
+    form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+    textarea { resize: vertical; min-height: 60px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
+    select, button { padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
+    button { background: #4CAF50; color: #fff; border: none; cursor: pointer; transition: background 0.3s; }
+    button:hover { background: #45a049; }
+
+    #response { background: #f1f1f1; padding: 15px; border-radius: 6px; max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; font-size: 15px; line-height: 1.5; }
+  </style>
 </head>
 <body>
-  <h1>RAG UFRO - Demo</h1>
-  <form id="askForm">
-    <input type="text" id="query" placeholder="Escribe tu consulta" size="50">
-    <select id="provider">
-      <option value="chatgpt">ChatGPT</option>
-      <option value="deepseek">DeepSeek</option>
-    </select>
-    <button type="submit">Enviar</button>
-  </form>
-  <pre id="response"></pre>
+  <div class="container">
+    <h1>RAG UFRO - Demo</h1>
+    <form id="askForm">
+      <textarea id="query" placeholder="Escribe tu consulta"></textarea>
+      <select id="provider">
+        <option value="chatgpt">ChatGPT</option>
+        <option value="deepseek">DeepSeek</option>
+      </select>
+      <button type="submit">Enviar</button>
+    </form>
+    <pre id="response"></pre>
+  </div>
 
   <script>
-    document.getElementById("askForm").onsubmit = async (e) => {
+    const askForm = document.getElementById("askForm");
+    const responseEl = document.getElementById("response");
+
+    askForm.onsubmit = async (e) => {
       e.preventDefault();
-      const query = document.getElementById("query").value;
+      const query = document.getElementById("query").value.trim();
       const provider = document.getElementById("provider").value;
-      const res = await fetch("/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, provider })
-      });
-      const data = await res.json();
-      document.getElementById("response").innerText = data.answer;
+
+      if(!query) return;
+
+      responseEl.innerText = "Cargando...";
+      
+      try {
+        const res = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query, provider })
+        });
+        const data = await res.json();
+        responseEl.innerText = data.answer || "No se recibió respuesta.";
+      } catch (err) {
+        responseEl.innerText = "Error al consultar el servidor.";
+        console.error(err);
+      }
     }
   </script>
 </body>
