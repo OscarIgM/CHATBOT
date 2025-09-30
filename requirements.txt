@@ -8,6 +8,4 @@ openai
 python-dotenv
 matplotlib
 scikit-learn
-jupyter
-ipykernel
 flask
