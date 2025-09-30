@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RAG UFRO Demo</title>
+</head>
+<body>
+  <h1>RAG UFRO - Demo</h1>
+  <form id="askForm">
+    <input type="text" id="query" placeholder="Escribe tu consulta" size="50">
+    <select id="provider">
+      <option value="chatgpt">ChatGPT</option>
+      <option value="deepseek">DeepSeek</option>
+    </select>
+    <button type="submit">Enviar</button>
+  </form>
+  <pre id="response"></pre>
+
+  <script>
+    document.getElementById("askForm").onsubmit = async (e) => {
+      e.preventDefault();
+      const query = document.getElementById("query").value;
+      const provider = document.getElementById("provider").value;
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, provider })
+      });
+      const data = await res.json();
+      document.getElementById("response").innerText = data.answer;
+    }
+  </script>
+</body>
+</html>

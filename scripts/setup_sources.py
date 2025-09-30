@@ -9,7 +9,7 @@ SOURCES_FILE = DATA_DIR / "sources.csv"
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-files = list(RAW_DIR.glob("*.pdf")) + list(RAW_DIR.glob("*.html"))
+files = list(RAW_DIR.glob("*.pdf")) + list(RAW_DIR.glob("*.html")) + list(RAW_DIR.glob("*.csv"))
 
 if not files:
     print("No se encontraron archivos PDF o HTML en data/raw/")

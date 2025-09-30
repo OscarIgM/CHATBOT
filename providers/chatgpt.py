@@ -5,12 +5,13 @@ from .base import Provider
 class ChatGPTProvider(Provider):
     """Adapter para la API de OpenAI (ChatGPT)."""
 
-    def __init__(self, api_key: str, model: str = "openai/gpt-4.1-mini"):
+    def __init__(self, api_key: str, model: str = "openai/gpt-4.1-mini", temperature: float = 0.7):
         self.client = OpenAI(
             api_key=api_key,
             base_url="https://openrouter.ai/api/v1/"
         )
         self._model = model
+        self.temperature = temperature
 
     @property
     def name(self) -> str:
@@ -21,7 +22,7 @@ class ChatGPTProvider(Provider):
             response = self.client.chat.completions.create(
                 model=self._model,
                 messages=messages,
-                temperature=kwargs.get("temperature", 0.1),
+                temperature=kwargs.get("temperature", self.temperature),
             )
             return response.choices[0].message.content
         except Exception as e:
